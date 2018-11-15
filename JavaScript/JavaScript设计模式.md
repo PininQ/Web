@@ -108,7 +108,7 @@ console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
   console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
 </script>
 ```
-### 2.2 原型模式的应用-ES5
+### 2.2 原型模式的应用-ES6
 
 ```html
 <table id="roster"></table>
@@ -150,9 +150,188 @@ console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
   const whh = new Student('王花花', '女', 98)
   const lsd = new Student('李栓蛋', '男', 78)
 
-  console.log('es5-whh.name :', whh.name, whh.sumScore());
-  console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
+  console.log('es6-whh.name :', whh.name, whh.sumScore());
+  console.log('es6-lsd.name :', lsd.name, lsd.sumScore());
 </script>
 ```
 
+## 3. 构建者模式 - 创建类模式
 
+```js
+var studentCount = 0
+
+function Student() {
+
+}
+
+function StudentBuilder() {
+  this.student = new Student()
+
+  this.setName = function (name) {
+    this.student.name = name
+  }
+
+  this.setGender = function (gender) {
+    if (gender !== '男' && gender !== '女') {
+      throw '好玩不'
+    }
+
+    this.student.gender = gender
+  }
+
+  this.setHairLength = function (hairLength) {
+    if (
+      (this.student.gender === '男' && hairLength > 1) ||
+      (this.student.gender === '女' && hairLength > 25)
+    ) {
+      throw '回去剪头发'
+    }
+
+    this.student.hairLength = hairLength
+  }
+
+  this.build = function () {
+    studentCount++
+    console.log(studentCount)
+    return this.student
+  }
+}
+
+var builder = new StudentBuilder()
+builder.setName('王花花')
+builder.setGender('男')
+builder.setHairLength(1)
+var whh = builder.build()
+
+console.log(whh);
+
+var builder2 = new StudentBuilder()
+builder2.setName('李栓蛋')
+builder2.setGender('女')
+builder2.setHairLength(20)
+var lsd = builder2.build()
+
+console.log(lsd);
+```
+
+### 3.1 构建者模式-原型化-ES5
+
+```js
+var studentCount = 0
+
+function Student() {
+
+}
+
+function StudentBuilder() {
+  this.student = new Student()
+}
+
+/* 下面部分改成 ES5 的原型模式 */
+
+StudentBuilder.prototype.setName = function (name) {
+  this.student.name = name
+}
+
+StudentBuilder.prototype.setGender = function (gender) {
+  if (gender !== '男' && gender !== '女') {
+    throw '好玩不'
+  }
+
+  this.student.gender = gender
+}
+
+StudentBuilder.prototype.setHairLength = function (hairLength) {
+  if (
+    (this.student.gender === '男' && hairLength > 1) ||
+    (this.student.gender === '女' && hairLength > 25)
+  ) {
+    throw '回去剪头发'
+  }
+
+  this.student.hairLength = hairLength
+}
+
+StudentBuilder.prototype.build = function () {
+  studentCount++
+  console.log(studentCount)
+  return this.student
+}
+
+var builder = new StudentBuilder()
+builder.setName('王花花')
+builder.setGender('男')
+builder.setHairLength(1)
+var whh = builder.build()
+
+console.log(whh);
+
+var builder2 = new StudentBuilder()
+builder2.setName('李栓蛋')
+builder2.setGender('女')
+builder2.setHairLength(20)
+var lsd = builder2.build()
+
+console.log(lsd);
+```
+
+### 3.2 构建者模式-ES6
+
+```js
+let studentCount = 0
+
+class Student {
+
+}
+
+class StudentBuilder {
+  constructor() {
+    this.student = new Student()
+  }
+
+  setName(name) {
+    this.student.name = name
+  }
+
+  setGender(gender) {
+    if (gender !== '男' && gender !== '女') {
+      throw '好玩不'
+    }
+
+    this.student.gender = gender
+  }
+
+  setHairLength(hairLength) {
+    if (
+      (this.student.gender === '男' && hairLength > 1) ||
+      (this.student.gender === '女' && hairLength > 25)
+    ) {
+      throw '回去剪头发'
+    }
+
+    this.student.hairLength = hairLength
+  }
+
+  build() {
+    studentCount++
+    console.log(studentCount)
+    return this.student
+  }
+}
+
+const builder = new StudentBuilder()
+builder.setName('王花花')
+builder.setGender('男')
+builder.setHairLength(1)
+const whh = builder.build()
+
+console.log(whh);
+
+const builder2 = new StudentBuilder()
+builder2.setName('李栓蛋')
+builder2.setGender('女')
+builder2.setHairLength(20)
+const lsd = builder2.build()
+
+console.log(lsd);
+```
