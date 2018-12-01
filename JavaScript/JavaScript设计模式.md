@@ -435,7 +435,7 @@ console.log(lsd)
 
 <script>
   // <form> 元素；为了给它绑定提交事件
-  var createForm = document.getElementById('create')
+  const createForm = document.getElementById('create')
 
   // 从此处开始
   init()
@@ -443,28 +443,28 @@ console.log(lsd)
   /* 初始化（启动） */
   function init() {
     // 绑定表单提交事件
-    createForm.addEventListener('submit', function (e) {
+    createForm.addEventListener('submit', e => {
       // 阻止默认跳转
       e.preventDefault()
       // 拿到用户输入的姓名、性别、头发长度
-      var name = document.querySelector('[name=name]').value
-      var gender = document.querySelector('[name=gender]:checked').value
-      var hairLength = document.querySelector('[name=hairLength]').value
+      const name = document.querySelector('[name=name]').value
+      const gender = document.querySelector('[name=gender]:checked').value
+      const hairLength = document.querySelector('[name=hairLength]').value
 
       try {
         // 开始使用 builder
-        var builder = new StudentBuilder()
+        const builder = new StudentBuilder()
         // 分别为其设置属性
         builder.setName(name)
         builder.setGender(gender)
         builder.setHairLength(hairLength)
         // 获取构建好的实例（学生）
-        var student = builder.build()
+        const student = builder.build()
+
+        console.log(student)
       } catch (e) { // 如果有错误信息，就捕获它，并且弹出错误消息
         alert(e)
       }
-
-      console.log(student)
     })
   }
 
