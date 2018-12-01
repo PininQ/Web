@@ -687,17 +687,16 @@ console.log(zks)
   /* 初始化 */
   function init() {
     // 获取表单元素，等着绑定事件
-    var form = document.getElementById('create')
+    const form = document.getElementById('create')
     // 给表单绑定提交事件
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', e => {
       e.preventDefault()
 
       // 获取姓名和专业
-      var name = document.querySelector('[name=name]').value
-      var type = document.querySelector('[name=type]').value
+      const name = document.querySelector('[name=name]').value
+      const type = document.querySelector('[name=type]').value
       // 新建用户
-      var student = studentFactory(name, type)
-
+      const student = studentFactory(name, type)
       // 重置表单
       form.reset()
 
