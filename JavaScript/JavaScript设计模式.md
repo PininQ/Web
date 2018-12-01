@@ -17,8 +17,8 @@ function Student(name, gender, score) {
 var whh = new Student('王花花', '女', 98)
 var lsd = new Student('李栓蛋', '男', 78)
 
-console.log('es5-whh.name :', whh.name, whh.sumScore());
-console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
+console.log('es5-whh.name :', whh.name, whh.sumScore())
+console.log('es5-lsd.name :', lsd.name, lsd.sumScore())
 ```
 ### 1.2 构造器模式-ES6
 
@@ -79,7 +79,7 @@ console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
     this.gender = gender
     this.score = score
     this.quality = 100
-
+    // 将拼接好的 HTML 挂载到页面上
     this.mount()
   }
 
@@ -103,9 +103,6 @@ console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
 
   var whh = new Student('王花花', '女', 98)
   var lsd = new Student('李栓蛋', '男', 78)
-
-  console.log('es5-whh.name :', whh.name, whh.sumScore());
-  console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
 </script>
 ```
 ### 2.2 原型模式的应用-ES6
@@ -149,9 +146,6 @@ console.log('es5-lsd.name :', lsd.name, lsd.sumScore());
 
   const whh = new Student('王花花', '女', 98)
   const lsd = new Student('李栓蛋', '男', 78)
-
-  console.log('es6-whh.name :', whh.name, whh.sumScore());
-  console.log('es6-lsd.name :', lsd.name, lsd.sumScore());
 </script>
 ```
 
@@ -203,15 +197,14 @@ builder.setGender('男')
 builder.setHairLength(1)
 var whh = builder.build()
 
-console.log(whh);
-
 var builder2 = new StudentBuilder()
 builder2.setName('李栓蛋')
 builder2.setGender('女')
 builder2.setHairLength(20)
 var lsd = builder2.build()
 
-console.log(lsd);
+console.log(whh)
+console.log(lsd)
 ```
 
 ### 3.1 构建者模式-原型化-ES5
@@ -228,7 +221,6 @@ function StudentBuilder() {
 }
 
 /* 下面部分改成 ES5 的原型模式 */
-
 StudentBuilder.prototype.setName = function (name) {
   this.student.name = name
 }
@@ -264,15 +256,14 @@ builder.setGender('男')
 builder.setHairLength(1)
 var whh = builder.build()
 
-console.log(whh);
-
 var builder2 = new StudentBuilder()
 builder2.setName('李栓蛋')
 builder2.setGender('女')
 builder2.setHairLength(20)
 var lsd = builder2.build()
 
-console.log(lsd);
+console.log(whh)
+console.log(lsd)
 ```
 
 ### 3.2 构建者模式-ES6
@@ -325,13 +316,188 @@ builder.setGender('男')
 builder.setHairLength(1)
 const whh = builder.build()
 
-console.log(whh);
-
 const builder2 = new StudentBuilder()
 builder2.setName('李栓蛋')
 builder2.setGender('女')
 builder2.setHairLength(20)
 const lsd = builder2.build()
 
+console.log(whh);
 console.log(lsd);
+```
+
+### 3.3 构建者模式的应用-ES5
+
+```html
+<form id="create">
+  <div>
+    姓名：
+    <input type="text" name="name" autofocus>
+  </div>
+  <div>
+    性别：
+    <input type="radio" name="gender" value="男" checked>男
+    <input type="radio" name="gender" value="女">女
+  </div>
+  <div>
+    头发长度：
+    <input type="number" name="hairLength">
+  </div>
+  <input type="submit" value="创建学生">
+</form>
+
+<script>
+  // <form> 元素；为了给它绑定提交事件
+  var createForm = document.getElementById('create')
+
+  // 从此处开始
+  init()
+
+  /* 初始化（启动） */
+  function init() {
+    // 绑定表单提交事件
+    createForm.addEventListener('submit', function (e) {
+      // 阻止默认跳转
+      e.preventDefault()
+      // 拿到用户输入的姓名、性别、头发长度
+      var name = document.querySelector('[name=name]').value
+      var gender = document.querySelector('[name=gender]:checked').value
+      var hairLength = document.querySelector('[name=hairLength]').value
+
+      try {
+        // 开始使用 builder
+        var builder = new StudentBuilder()
+        // 分别为其设置属性
+        builder.setName(name)
+        builder.setGender(gender)
+        builder.setHairLength(hairLength)
+        // 获取构建好的实例（学生）
+        var student = builder.build()
+      } catch (e) { // 如果有错误信息，就捕获它，并且弹出错误消息
+        alert(e)
+      }
+
+      console.log(student)
+    })
+  }
+
+  function Student() {}
+
+  function StudentBuilder() {
+    this.student = new Student()
+  }
+
+  StudentBuilder.prototype.setName = function (name) {
+    this.student.name = name
+  }
+
+  StudentBuilder.prototype.setGender = function (gender) {
+    if (gender != '男' && gender != '女')
+      throw '好玩不'
+
+    this.student.gender = gender
+  }
+
+  StudentBuilder.prototype.setHairLength = function (hairLength) {
+    if (
+      (this.student.gender == '男' && hairLength > 1) ||
+      (this.student.gender == '女' && hairLength > 25)
+    ) throw '回去剪头发'
+
+    this.student.hairLength = hairLength
+  }
+
+  StudentBuilder.prototype.build = function () {
+    return this.student
+  }
+</script>
+```
+
+### 3.4 构建者模式的应用-ES6
+
+```html
+<form id="create">
+  <div>
+    姓名：
+    <input type="text" name="name" autofocus>
+  </div>
+  <div>
+    性别：
+    <input type="radio" name="gender" value="男" checked>男
+    <input type="radio" name="gender" value="女">女
+  </div>
+  <div>
+    头发长度：
+    <input type="number" name="hairLength">
+  </div>
+  <input type="submit" value="创建学生">
+</form>
+
+<script>
+  // <form> 元素；为了给它绑定提交事件
+  var createForm = document.getElementById('create')
+
+  // 从此处开始
+  init()
+
+  /* 初始化（启动） */
+  function init() {
+    // 绑定表单提交事件
+    createForm.addEventListener('submit', function (e) {
+      // 阻止默认跳转
+      e.preventDefault()
+      // 拿到用户输入的姓名、性别、头发长度
+      var name = document.querySelector('[name=name]').value
+      var gender = document.querySelector('[name=gender]:checked').value
+      var hairLength = document.querySelector('[name=hairLength]').value
+
+      try {
+        // 开始使用 builder
+        var builder = new StudentBuilder()
+        // 分别为其设置属性
+        builder.setName(name)
+        builder.setGender(gender)
+        builder.setHairLength(hairLength)
+        // 获取构建好的实例（学生）
+        var student = builder.build()
+      } catch (e) { // 如果有错误信息，就捕获它，并且弹出错误消息
+        alert(e)
+      }
+
+      console.log(student)
+    })
+  }
+
+  function Student() {}
+
+  class StudentBuilder {
+    constructor() {
+      this.student = new Student()
+    }
+
+    setName(name) {
+      this.student.name = name
+    }
+
+    setGender(gender) {
+      if (gender != '男' && gender != '女')
+        throw '好玩不'
+
+      this.student.gender = gender
+    }
+
+    setHairLength(hairLength) {
+      if (
+        (this.student.gender == '男' && hairLength > 1) ||
+        (this.student.gender == '女' && hairLength > 25)
+      ) throw '回去剪头发'
+
+      this.student.hairLength = hairLength
+    }
+
+    build() {
+      return this.student
+    }
+  }
+</script>
 ```
