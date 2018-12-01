@@ -1,0 +1,114 @@
+<div>
+  <div>采购余额：<span id="balance">100</span>元</div>
+  <div class="page a">
+    部门A:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+  <div class="page b">
+    部门B:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+  <div class="page c">
+    部门C:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+</div>
+
+<script>
+  // 显示余额的元素
+  const elBalance = document.getElementById('balance')
+
+  /**
+   * 总务处资源（其中包括预算余额）
+   * @return {*}
+   * @constructor
+   */
+  class Resource {
+    constructor() {
+      // 如果不是第一次 new (instance 肯定是存在的)
+      if (Resource.instance)
+        return Resource.instance
+      else { // 否则 (instance 不存在)
+        // 组装新对象
+        this.balance = 100
+        // 将其存在 Resource 机器上
+        Resource.instance = this
+      }
+    }
+
+    add(num) {
+      this.change(num)
+    }
+
+    sub(num) {
+      this.change(-num)
+    }
+
+    change(num) {
+      if (!num)
+        return;
+      this.balance += parseFloat(num)
+    }
+  }
+
+  init()
+
+  /**
+   * 初始化
+   */
+  function init() {
+    const a = new Division('.page.a')
+    const b = new Division('.page.b')
+    const c = new Division('.page.c')
+  }
+
+  /**
+   * 刷新余额
+   */
+  function renderBalance() {
+    const resource = new Resource()
+    elBalance.innerText = resource.balance
+  }
+
+  /**
+   * 部门构造器
+   * @param {string} selector 部门对应的选择器
+   * @constructor
+   */
+  function Division(selector) {
+    const resource = new Resource()
+
+    // 选中必要的元素
+    this.el = document.querySelector(selector)
+    this.elAdd = this.el.querySelector('.add')
+    this.elSub = this.el.querySelector('.sub')
+    this.elInput = this.el.querySelector('input')
+
+    // 监听点击事件
+    this.elAdd.addEventListener('click', () => {
+      // 缓存 input, 方便后面调用
+      const i = this.elInput
+      // 执行充值
+      resource.add(i.value)
+      // 清空 input
+      i.value = ''
+
+      // 刷新余额
+      renderBalance()
+    })
+
+    this.elSub.addEventListener('click', () => {
+      const i = this.elInput
+      resource.sub(i.value)
+      i.value = ''
+
+      renderBalance()
+    })
+  }
+</script>

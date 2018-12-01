@@ -1,0 +1,70 @@
+<form id="create">
+  <div>
+    姓名：<input type="text" name="name">
+  </div>
+  <div>
+    专业：<select name="type">
+      <option value="文科">文科</option>
+      <option value="理科">理科</option>
+      <option value="体育">体育</option>
+    </select>
+  </div>
+  <div>
+    <input type="submit" value="创建用户">
+  </div>
+</form>
+
+<script>
+  init()
+
+  /* 初始化 */
+  function init() {
+    // 获取表单元素，等着绑定事件
+    const form = document.getElementById('create')
+    // 给表单绑定提交事件
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+
+      // 获取姓名和专业
+      const name = document.querySelector('[name=name]').value
+      const type = document.querySelector('[name=type]').value
+      // 新建用户
+      const student = studentFactory(name, type)
+      // 重置表单
+      form.reset()
+
+      console.log(student);
+    })
+  }
+
+  class Student {
+    constructor(name, subjects) {
+      this.name = name
+      // ...
+
+      // 如果是文科生：['政治', '历史', '地理']
+      // 如果是理科生：['数学', '物理', '化学']
+      // liberal_arts / science
+      this.subjects = subjects
+    }
+  }
+
+  /**
+   * 创建学生
+   * @param {string} name 姓名
+   * @param {string} type 文科还是理科
+   * @return {Student}
+   */
+  function studentFactory(name, type) {
+    switch (type) {
+      case '文科':
+        return new Student(name, ['政治', '历史', '地理'])
+      case '理科':
+        return new Student(name, ['数学', '物理', '化学'])
+      case '体育':
+        return new Student(name, ['长跑', '跳远', '跳高'])
+      default:
+        throw new Error('没有这个专业，别瞎填')
+    }
+  }
+</script>

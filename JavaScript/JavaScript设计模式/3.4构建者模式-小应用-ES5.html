@@ -1,0 +1,82 @@
+<form id="create">
+    <div>
+      姓名：
+      <input type="text" name="name" autofocus>
+    </div>
+    <div>
+      性别：
+      <input type="radio" name="gender" value="男" checked>男
+      <input type="radio" name="gender" value="女">女
+    </div>
+    <div>
+      头发长度：
+      <input type="number" name="hairLength">
+    </div>
+    <input type="submit" value="创建学生">
+  </form>
+
+  <script>
+    // <form> 元素；为了给它绑定提交事件
+    var createForm = document.getElementById('create')
+
+    // 从此处开始
+    init()
+
+    /* 初始化（启动） */
+    function init() {
+      // 绑定表单提交事件
+      createForm.addEventListener('submit', function (e) {
+        // 阻止默认跳转
+        e.preventDefault()
+        // 拿到用户输入的姓名、性别、头发长度
+        var name = document.querySelector('[name=name]').value
+        var gender = document.querySelector('[name=gender]:checked').value
+        var hairLength = document.querySelector('[name=hairLength]').value
+
+        try {
+          // 开始使用 builder
+          var builder = new StudentBuilder()
+          // 分别为其设置属性
+          builder.setName(name)
+          builder.setGender(gender)
+          builder.setHairLength(hairLength)
+          // 获取构建好的实例（学生）
+          var student = builder.build()
+        } catch (e) { // 如果有错误信息，就捕获它，并且弹出错误消息
+          alert(e)
+        }
+
+        console.log(student)
+      })
+    }
+
+    function Student() {}
+
+    function StudentBuilder() {
+      this.student = new Student()
+    }
+
+    StudentBuilder.prototype.setName = function (name) {
+      this.student.name = name
+    }
+
+    StudentBuilder.prototype.setGender = function (gender) {
+      if (gender != '男' && gender != '女')
+        throw '好玩不'
+
+      this.student.gender = gender
+    }
+
+    StudentBuilder.prototype.setHairLength = function (hairLength) {
+      if (
+        (this.student.gender == '男' && hairLength > 1) ||
+        (this.student.gender == '女' && hairLength > 25)
+      ) throw '回去剪头发'
+
+      this.student.hairLength = hairLength
+    }
+
+    StudentBuilder.prototype.build = function () {
+      return this.student
+    }
+  </script>
