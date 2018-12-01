@@ -322,8 +322,8 @@ builder2.setGender('女')
 builder2.setHairLength(20)
 const lsd = builder2.build()
 
-console.log(whh);
-console.log(lsd);
+console.log(whh)
+console.log(lsd)
 ```
 
 ### 3.3 构建者模式的应用-ES5
@@ -497,6 +497,242 @@ console.log(lsd);
 
     build() {
       return this.student
+    }
+  }
+</script>
+```
+## 4. 工厂模式 - 创建类模式
+
+### 4.1 工厂模式-ES5
+
+```js
+function Student(name, subjects) {
+  this.name = name
+  // ...
+
+  // 如果是文科生：['政治', '历史', '地理']
+  // 如果是理科生：['数学', '物理', '化学']
+  // liberal_arts / science
+  this.subjects = subjects
+}
+
+/**
+ * 创建学生
+ * @param {string} name 姓名
+ * @param {string} type 文科还是理科
+ * @return {Student}
+ */
+function factory(name, type) {
+  switch (type) {
+    case '文科':
+      return new Student(name, ['政治', '历史', '地理'])
+    case '理科':
+      return new Student(name, ['数学', '物理', '化学'])
+    case '体育':
+      return new Student(name, ['长跑', '跳远', '跳高'])
+    default:
+      throw new Error('没有这个专业，别瞎填')
+  }
+}
+
+var whh = factory('王花花', '文科')
+var lsd = factory('李栓蛋', '理科')
+var zks = factory('赵可爽', '体育')
+var lbb = factory('刘贝贝', '啦啦')
+
+console.log(whh)
+console.log(lsd)
+console.log(zks)
+```
+### 4.2 工厂模式-ES6
+
+```js
+class Student {
+  constructor(name, subjects) {
+    this.name = name
+    // ...
+
+    // 如果是文科生：['政治', '历史', '地理']
+    // 如果是理科生：['数学', '物理', '化学']
+    // liberal_arts / science
+    this.subjects = subjects
+  }
+}
+
+/**
+ * 创建学生
+ * @param {string} name 姓名
+ * @param {string} type 文科还是理科
+ * @return {Student}
+ */
+function factory(name, type) {
+  switch (type) {
+    case '文科':
+      return new Student(name, ['政治', '历史', '地理'])
+    case '理科':
+      return new Student(name, ['数学', '物理', '化学'])
+    case '体育':
+      return new Student(name, ['长跑', '跳远', '跳高'])
+    default:
+      throw new Error('没有这个专业，别瞎填')
+  }
+}
+
+const whh = factory('王花花', '文科')
+const lsd = factory('李栓蛋', '理科')
+const zks = factory('赵可爽', '体育')
+const lbb = factory('刘贝贝', '啦啦')
+
+console.log(whh)
+console.log(lsd)
+console.log(zks)
+```
+
+### 4.3 工厂模式的应用-ES5
+
+```html
+<form id="create">
+  <div>
+    姓名：<input type="text" name="name">
+  </div>
+  <div>
+    专业：<select name="type">
+      <option value="文科">文科</option>
+      <option value="理科">理科</option>
+      <option value="体育">体育</option>
+    </select>
+  </div>
+  <div>
+    <input type="submit" value="创建用户">
+  </div>
+</form>
+
+<script>
+  init()
+
+  /* 初始化 */
+  function init() {
+    // 获取表单元素，等着绑定事件
+    var form = document.getElementById('create')
+    // 给表单绑定提交事件
+    form.addEventListener('submit', function (e) {
+      e.preventDefault()
+
+      // 获取姓名和专业
+      var name = document.querySelector('[name=name]').value
+      var type = document.querySelector('[name=type]').value
+      // 新建用户
+      var student = studentFactory(name, type)
+
+      // 重置表单
+      form.reset()
+
+      console.log(student);
+    })
+  }
+
+  function Student(name, subjects) {
+    this.name = name
+    // ...
+
+    // 如果是文科生：['政治', '历史', '地理']
+    // 如果是理科生：['数学', '物理', '化学']
+    // liberal_arts / science
+    this.subjects = subjects
+  }
+
+  /**
+   * 创建学生
+   * @param {string} name 姓名
+   * @param {string} type 文科还是理科
+   * @return {Student}
+   */
+  function studentFactory(name, type) {
+    switch (type) {
+      case '文科':
+        return new Student(name, ['政治', '历史', '地理'])
+      case '理科':
+        return new Student(name, ['数学', '物理', '化学'])
+      case '体育':
+        return new Student(name, ['长跑', '跳远', '跳高'])
+      default:
+        throw new Error('没有这个专业，别瞎填')
+    }
+  }
+</script>
+```
+
+### 4.4 工厂模式的应用-ES6
+
+```html
+<form id="create">
+  <div>
+    姓名：<input type="text" name="name">
+  </div>
+  <div>
+    专业：<select name="type">
+      <option value="文科">文科</option>
+      <option value="理科">理科</option>
+      <option value="体育">体育</option>
+    </select>
+  </div>
+  <div>
+    <input type="submit" value="创建用户">
+  </div>
+</form>
+
+<script>
+  init()
+
+  /* 初始化 */
+  function init() {
+    // 获取表单元素，等着绑定事件
+    var form = document.getElementById('create')
+    // 给表单绑定提交事件
+    form.addEventListener('submit', function (e) {
+      e.preventDefault()
+
+      // 获取姓名和专业
+      var name = document.querySelector('[name=name]').value
+      var type = document.querySelector('[name=type]').value
+      // 新建用户
+      var student = studentFactory(name, type)
+
+      // 重置表单
+      form.reset()
+
+      console.log(student);
+    })
+  }
+
+  class Student {
+    constructor(name, subjects) {
+      this.name = name
+      // ...
+
+      // 如果是文科生：['政治', '历史', '地理']
+      // 如果是理科生：['数学', '物理', '化学']
+      // liberal_arts / science
+      this.subjects = subjects
+    }
+  }
+
+  /**
+   * 创建学生
+   * @param {string} name 姓名
+   * @param {string} type 文科还是理科
+   * @return {Student}
+   */
+  function studentFactory(name, type) {
+    switch (type) {
+      case '文科':
+        return new Student(name, ['政治', '历史', '地理'])
+      case '理科':
+        return new Student(name, ['数学', '物理', '化学'])
+      case '体育':
+        return new Student(name, ['长跑', '跳远', '跳高'])
+      default:
+        throw new Error('没有这个专业，别瞎填')
     }
   }
 </script>
