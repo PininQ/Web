@@ -787,3 +787,306 @@ var stuFactory = userAbstractFactory('student')
 var stu = stuFactory('李栓蛋')
 console.log(stu)
 ```
+
+## 5. 单例模式 - 创建类模式
+
+### 5.1 单例模式-ES5
+
+```js
+function Resource() {
+  // 如果不是第一次 new (instance 肯定是存在的)
+  if (Resource.instance)
+    return Resource.instance
+  else { // 否则 (instance 不存在)
+    // 组装新对象
+    this.balance = 100
+    // 将其存在 Resource 机器上
+    Resource.instance = this
+  }
+}
+
+var r = new Resource()
+
+console.log('r :', r) // 100
+r.balance = 50
+console.log('r :', r) // 50
+
+var r2 = new Resource()
+
+console.log('r2 :', r2) // 50
+
+r.balance = 55
+
+console.log('r2 :', r2) // 55
+```
+
+### 5.2 单例模式-ES6
+
+```js
+class Resource {
+  constructor() {
+    // 如果不是第一次 new (instance 肯定是存在的)
+    if (Resource.instance)
+      return Resource.instance
+    else { // 否则 (instance 不存在)
+      // 组装新对象
+      this.balance = 100
+      // 将其存在 Resource 机器上
+      Resource.instance = this
+    }
+  }
+}
+
+const r = new Resource()
+
+console.log('r :', r) // 100
+r.balance = 50
+console.log('r :', r) // 50
+
+const r2 = new Resource()
+
+console.log('r2 :', r2) // 50
+
+r.balance = 55
+
+console.log('r2 :', r2) // 55
+```
+
+### 5.3 单例模式的应用-ES5
+
+```html
+<div>
+  <div>采购余额：<span id="balance">100</span>元</div>
+  <div class="page a">
+    部门A:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+  <div class="page b">
+    部门B:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+  <div class="page c">
+    部门C:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+</div>
+
+<script>
+  // 显示余额的元素
+  var elBalance = document.getElementById('balance')
+
+  init()
+
+  /**
+   * 初始化
+   */
+  function init() {
+    var a = new Division('.page.a')
+    var b = new Division('.page.b')
+    var c = new Division('.page.c')
+  }
+
+  /**
+   * 刷新余额
+   */
+  function renderBalance() {
+    var resource = new Resource()
+    elBalance.innerText = resource.balance
+  }
+
+  /**
+   * 部门构造器
+   * @param {string} selector 部门对应的选择器
+   * @constructor
+   */
+  function Division(selector) {
+    var resource = new Resource()
+
+    // 选中必要的元素
+    this.el = document.querySelector(selector)
+    this.elAdd = this.el.querySelector('.add')
+    this.elSub = this.el.querySelector('.sub')
+    this.elInput = this.el.querySelector('input')
+
+    // 缓存外部的 this，用于稍后的事件回调函数内
+    var me = this
+
+    // 监听点击事件
+    this.elAdd.addEventListener('click', function () {
+      // 缓存 input, 方便后面调用
+      var i = me.elInput
+      // 执行充值
+      resource.add(i.value)
+      // 清空 input
+      i.value = ''
+
+      // 刷新余额
+      renderBalance()
+    })
+
+    this.elSub.addEventListener('click', function () {
+      var i = me.elInput
+      resource.sub(i.value)
+      i.value = ''
+
+      renderBalance()
+    })
+  }
+
+  /**
+   * 总务处资源（其中包括预算余额）
+   * @return {*}
+   * @constructor
+   */
+  function Resource() {
+    // 如果不是第一次 new (instance 肯定是存在的)
+    if (Resource.instance)
+      return Resource.instance
+    else { // 否则 (instance 不存在)
+      // 组装新对象
+      this.balance = 100
+      // 将其存在 Resource 机器上
+      Resource.instance = this
+    }
+  }
+
+  Resource.prototype.add = function (num) {
+    this.change(num)
+  }
+
+  Resource.prototype.sub = function (num) {
+    this.change(-num)
+  }
+
+  Resource.prototype.change = function (num) {
+    if (!num)
+      return;
+    this.balance += parseFloat(num)
+  }
+</script>
+```
+
+### 5.4 单例模式的应用-ES6
+
+```html
+<div>
+  <div>采购余额：<span id="balance">100</span>元</div>
+  <div class="page a">
+    部门A:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+  <div class="page b">
+    部门B:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+  <div class="page c">
+    部门C:
+    <input type="number">
+    <button class="add">+</button>
+    <button class="sub">-</button>
+  </div>
+</div>
+
+<script>
+  // 显示余额的元素
+  const elBalance = document.getElementById('balance')
+
+  /**
+   * 总务处资源（其中包括预算余额）
+   * @return {*}
+   * @constructor
+   */
+  class Resource {
+    constructor() {
+      // 如果不是第一次 new (instance 肯定是存在的)
+      if (Resource.instance)
+        return Resource.instance
+      else { // 否则 (instance 不存在)
+        // 组装新对象
+        this.balance = 100
+        // 将其存在 Resource 机器上
+        Resource.instance = this
+      }
+    }
+
+    add(num) {
+      this.change(num)
+    }
+
+    sub(num) {
+      this.change(-num)
+    }
+
+    change(num) {
+      if (!num)
+        return;
+      this.balance += parseFloat(num)
+    }
+  }
+
+  init()
+
+  /**
+   * 初始化
+   */
+  function init() {
+    const a = new Division('.page.a')
+    const b = new Division('.page.b')
+    const c = new Division('.page.c')
+  }
+
+  /**
+   * 刷新余额
+   */
+  function renderBalance() {
+    const resource = new Resource()
+    elBalance.innerText = resource.balance
+  }
+
+  /**
+   * 部门构造器
+   * @param {string} selector 部门对应的选择器
+   * @constructor
+   */
+  function Division(selector) {
+    const resource = new Resource()
+
+    // 选中必要的元素
+    this.el = document.querySelector(selector)
+    this.elAdd = this.el.querySelector('.add')
+    this.elSub = this.el.querySelector('.sub')
+    this.elInput = this.el.querySelector('input')
+
+    // 监听点击事件
+    this.elAdd.addEventListener('click', () => {
+      // 缓存 input, 方便后面调用
+      const i = this.elInput
+      // 执行充值
+      resource.add(i.value)
+      // 清空 input
+      i.value = ''
+
+      // 刷新余额
+      renderBalance()
+    })
+
+    this.elSub.addEventListener('click', () => {
+      const i = this.elInput
+      resource.sub(i.value)
+      i.value = ''
+
+      renderBalance()
+    })
+  }
+</script>
+```
