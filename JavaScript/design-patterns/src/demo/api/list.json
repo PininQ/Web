@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "香辣鸡腿堡",
+    "price": 149,
+    "discount": 1
+  },
+  {
+    "id": 2,
+    "name": "老北京鸡肉卷",
+    "price": 369,
+    "discount": 1
+  },
+  {
+    "id": 3,
+    "name": "墨西哥鸡肉卷",
+    "price": 375,
+    "discount": 0
+  },
+  {
+    "id": 4,
+    "name": "巨无霸鸡腿堡",
+    "price": 1320,
+    "discount": 0
+  }
+]

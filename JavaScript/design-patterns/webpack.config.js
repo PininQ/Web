@@ -19,7 +19,7 @@ module.exports = {
     port: 9000, // 端口号
     proxy: {
       '/api/*': {
-        target: 'http:localhost:8880'
+        target: 'http://localhost:8880'
       }
     }
   },
