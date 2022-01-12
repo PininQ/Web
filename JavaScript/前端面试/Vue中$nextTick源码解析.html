@@ -1,0 +1,69 @@
+<div id="app">
+  <div class="msg">
+    <form-report ref="child" :name="childName"></form-report>
+  </div>
+</div>
+
+<script>
+  Vue.component('form-report', {
+    props: ['name'],
+    methods: {
+      showName() {
+        console.log('子组件name：' + this.name)
+      },
+    },
+    template: '<div>{{name}}</div>',
+  })
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        childName: '',
+      }
+    },
+    mounted() {
+      this.childName = '我是子组件名字'
+      this.$refs.child.showName()
+    },
+  })
+</script>
+
+<script>
+  export let isUsingMicroTask = false
+  if (typeof Promise !== 'undefined' && isNative(Promise)) {
+    //判断1：是否原生支持Promise
+    const p = Promise.resolve()
+    timerFunc = () => {
+      p.then(flushCallbacks)
+      if (isIOS) setTimeout(noop)
+    }
+    isUsingMicroTask = true
+  } else if (
+    !isIE &&
+    typeof MutationObserver !== 'undefined' &&
+    (isNative(MutationObserver) || MutationObserver.toString() === '[object MutationObserverConstructor]')
+  ) {
+    //判断2：是否原生支持MutationObserver
+    let counter = 1
+    const observer = new MutationObserver(flushCallbacks)
+    const textNode = document.createTextNode(String(counter))
+    observer.observe(textNode, {
+      characterData: true,
+    })
+    timerFunc = () => {
+      counter = (counter + 1) % 2
+      textNode.data = String(counter)
+    }
+    isUsingMicroTask = true
+  } else if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
+    //判断3：是否原生支持setImmediate
+    timerFunc = () => {
+      setImmediate(flushCallbacks)
+    }
+  } else {
+    //判断4：上面都不行，直接用setTimeout
+    timerFunc = () => {
+      setTimeout(flushCallbacks, 0)
+    }
+  }
+</script>
